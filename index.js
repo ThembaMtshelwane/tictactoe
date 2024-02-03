@@ -29,7 +29,7 @@ const getBotToken = (userToken) => {
 
 // Restart Game
 restartButton.addEventListener('click', () => {
-  if (isBlocksFilled() || checkWinConditions()) {
+  if (isBlocksFilled() || checkWinConditions().outcome) {
     main.removeChild(winMessage)
     Array.from(blocks).forEach((block) => {
       block.textContent = ''
@@ -42,10 +42,10 @@ Array.from(blocks).forEach((block) => {
   block.addEventListener('click', (e) => {
     if (block.textContent === '') {
       block.textContent = selectedToken
-      aiBotResponse(botToken)
       if (checkWinConditions().outcome) {
         whoWins(checkWinConditions().token)
       }
+      aiBotResponse(botToken)
     }
   })
 })
@@ -53,13 +53,17 @@ Array.from(blocks).forEach((block) => {
 // AI Bot Response
 const aiBotResponse = (botToken) => {
   // find an empty spot on board to add token
-  const { row, col } = findEmptyElementPosition(board)
-  // Which spot is the best one
-  // add token
-  board[row][col].textContent = botToken
+  const { row, col } = latestOccupiedX(board)
+  console.log()
+  if (row !== null && col !== null) {
+    // Which spot is the best one
+
+    // add token
+    board[row][col].textContent = botToken
+  }
 }
 
-const findEmptyElementPosition = (board) => {
+const latestOccupiedX = (board) => {
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
       const block = board[i][j]
@@ -68,7 +72,7 @@ const findEmptyElementPosition = (board) => {
       }
     }
   }
-  return null // Return null if no non-empty element is found
+  return { row: null, col: null }
 }
 
 // Check if grid is filled

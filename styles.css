@@ -7,23 +7,32 @@
   font-size: 16px;
   font-family: 'Courier New', Courier, monospace;
   color: rgb(216, 216, 216);
-  background-color: rgb(2, 1, 5);
+  background-color:
   font-weight: 800;
 }
 
 body {
   background-color: rgb(2, 1, 5);
-  height: 100vh;
+  height: 100vh; rgb(2, 1, 5);
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 #token-score {
   margin-top: 10px;
   padding: 20px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
 }
 
@@ -52,6 +61,21 @@ option {
   align-items: center;
   border: none;
 }
+
+.show-win-message{
+  font-size: 3.5rem;
+  width: 70%;
+  height: 50%;
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:  #020105be;
+  border-radius: 2px;
+}
+
+
 
 #grid {
   display: grid;

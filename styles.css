@@ -71,8 +71,9 @@ option {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color:  #020105be;
+  background-color: rgba(107, 4, 4, 0.121);
   border-radius: 2px;
+  padding: 20px;
 }
 
 

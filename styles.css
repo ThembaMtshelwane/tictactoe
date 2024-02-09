@@ -41,7 +41,7 @@ select {
   height: 100%;
   padding: 10px;
   border: none;
-  background-color: rgba(21, 15, 34, 0.753);
+background-color: rgba(64, 45, 106, 0.753);
   font-size: 2rem;
   cursor: pointer;
 }
@@ -53,7 +53,7 @@ option {
 #restart {
   width: 30%;
   padding: 20px;
-  background-color: rgba(21, 15, 34, 0.753);
+background-color: rgba(64, 45, 106, 0.753);
   border-radius: 7px;
   font-size: 1.2rem;
   display: flex;
@@ -91,7 +91,7 @@ option {
   width: 100px;
   margin: 10px;
   font-size: 5rem;
-  background-color: rgba(21, 15, 34, 0.753);
+  background-color: rgba(64, 45, 106, 0.753);
   border-radius: 7px;
   border: none;
 }
@@ -99,5 +99,5 @@ option {
 button:hover {
   cursor: pointer;
   transform: scale(1.2);
-  background-color: rgba(28, 17, 52, 0.365);
+  background-color: rgba(43, 26, 80, 0.365);
 }

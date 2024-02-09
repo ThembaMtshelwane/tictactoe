@@ -64,43 +64,47 @@ const aiBotResponse = () => {
 /** *********************************************** */
 // AI Algorithm
 const generateBestSpot = () => {
-  // // Occupy first available space
-  // for (let i = 0; i < 3; i++) {
-  //   for (let j = 0; j < 3; j++) {
-  //     if (board[i][j].textContent === '') {
-  //       return { row: i, column: j }
-  //     }
-  //   }
-  // }
-  /* *********** */
-  // // Occupy a random available space
-  // const availableSpaces = []
-  // for (let i = 0; i < 3; i++) {
-  //   for (let j = 0; j < 3; j++) {
-  //     if (board[i][j].textContent === '') {
-  //       availableSpaces.push({ row: i, column: j })
-  //     }
-  //   }
-  // }
-  // return availableSpaces[Math.floor(Math.random() * availableSpaces.length)]
-  let bestScore = -Infinity
-  let bestMove
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      const block = board[i][j]
-      if (block.textContent === '') {
-        block.textContent = botToken
-        const score = minmax(board, 0, false)
-        console.log(score)
-        block.textContent = ''
-        if (score > bestScore) {
-          bestScore = score
-          bestMove = { row: i, column: j }
+  if (Math.floor(Math.random() * 10) % 2 === 0) {
+    // Occupy first available space
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j].textContent === '') {
+          return { row: i, column: j }
         }
       }
     }
+  } else {
+    /* *********** */
+    // Occupy a random available space
+    const availableSpaces = []
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j].textContent === '') {
+          availableSpaces.push({ row: i, column: j })
+        }
+      }
+    }
+    return availableSpaces[Math.floor(Math.random() * availableSpaces.length)]
   }
-  return bestMove
+
+  // let bestScore = -Infinity
+  // let bestMove
+  // for (let i = 0; i < 3; i++) {
+  //   for (let j = 0; j < 3; j++) {
+  //     const block = board[i][j]
+  //     if (block.textContent === '') {
+  //       block.textContent = botToken
+  //       const score = minmax(board, 0, false)
+  //       console.log(score)
+  //       block.textContent = ''
+  //       if (score > bestScore) {
+  //         bestScore = score
+  //         bestMove = { row: i, column: j }
+  //       }
+  //     }
+  //   }
+  // }
+  // return bestMove
 }
 
 // Check if grid is filled

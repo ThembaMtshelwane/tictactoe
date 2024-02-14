@@ -56,79 +56,93 @@ Array.from(blocks).forEach((block) => {
 // AI Bot Response
 const aiBotResponse = () => {
   if (!isBlocksFilled()) {
-    const { row, column } = generateBestSpot()
-    // console.log(row, column)
-    board[row][column].textContent = botToken
+    const bestMove = generateBestMove() // Correct function name
+    if (bestMove) {
+      const { row, column } = bestMove // Destructure if a valid move is found
+      board[row][column].textContent = botToken
+    } else {
+      console.log('No valid moves found!')
+    }
+  } else {
+    console.log('Board is filled. No moves to make.')
   }
 }
 /** *********************************************** */
 // AI Algorithm
-const generateBestSpot = () => {
-  if (Math.floor(Math.random() * 10) % 2 === 0) {
-    // Occupy first available space
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[i][j].textContent === '') {
-          return { row: i, column: j }
+// const generateBestMove = () => {
+// if (Math.floor(Math.random() * 10) % 2 === 0) {
+//   // Occupy first available space
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 3; j++) {
+//       if (board[i][j].textContent === '') {
+//         return { row: i, column: j }
+//       }
+//     }
+//   }
+// } else {
+//   // Occupy a random available space
+//   const availableSpaces = []
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 3; j++) {
+//       if (board[i][j].textContent === '') {
+//         availableSpaces.push({ row: i, column: j })
+//       }
+//     }
+//   }
+//   return availableSpaces[Math.floor(Math.random() * availableSpaces.length)]
+// }
+// }
+
+// Function to calculate the best move using minimax with alpha-beta pruning
+const generateBestMove = () => {
+  let bestScore = -Infinity
+  let bestMove = null
+  // Alpha and beta values for alpha-beta pruning
+  let alpha = -Infinity
+  let beta = Infinity
+
+  // Loop through each empty cell
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (board[i][j].textContent === '') {
+        // Make a move
+        board[i][j].textContent = botToken
+        // Calculate the score for this move using minimax algorithm with alpha-beta pruning
+        const score = minimaxAlphaBeta(board, 0, false, alpha, beta)
+        // Undo the move
+        board[i][j].textContent = ''
+        // Update bestScore and bestMove if necessary
+        if (score > bestScore) {
+          bestScore = score
+          bestMove = { row: i, column: j }
         }
       }
     }
-  } else {
-    /* *********** */
-    // Occupy a random available space
-    const availableSpaces = []
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[i][j].textContent === '') {
-          availableSpaces.push({ row: i, column: j })
-        }
-      }
-    }
-    return availableSpaces[Math.floor(Math.random() * availableSpaces.length)]
   }
 
-  // let bestScore = -Infinity
-  // let bestMove
-  // for (let i = 0; i < 3; i++) {
-  //   for (let j = 0; j < 3; j++) {
-  //     const block = board[i][j]
-  //     if (block.textContent === '') {
-  //       block.textContent = botToken
-  //       const score = minmax(board, 0, false)
-  //       console.log(score)
-  //       block.textContent = ''
-  //       if (score > bestScore) {
-  //         bestScore = score
-  //         bestMove = { row: i, column: j }
-  //       }
-  //     }
-  //   }
-  // }
-  // return bestMove
+  return bestMove
 }
 
-// Check if grid is filled
-const isBlocksFilled = () => {
-  return Array.from(blocks).every((block) => block.textContent !== '')
-}
-
-// Check simulate future plays
-const minmax = (board, depth, isMaximizing) => {
-  const result = checkWinConditions().token
-  if (result !== null) {
-    return mapping[result]
+// Function to calculate the score using minimax with alpha-beta pruning
+const minimaxAlphaBeta = (board, depth, isMaximizing, alpha, beta) => {
+  const result = checkWinConditions()
+  if (result.outcome !== null) {
+    return mapping[result.token] * (10 - depth)
   }
 
   if (isMaximizing) {
     let bestScore = -Infinity
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        const block = board[i][j]
-        if (block.textContent === '') {
-          block.textContent = botToken
-          const score = minmax(board, depth + 1, false)
-          block.textContent = ''
+        if (board[i][j].textContent === '') {
+          board[i][j].textContent = botToken
+          const score = minimaxAlphaBeta(board, depth + 1, false, alpha, beta)
+          board[i][j].textContent = ''
           bestScore = Math.max(score, bestScore)
+          alpha = Math.max(alpha, score)
+          if (beta <= alpha) {
+            break // Beta cutoff
+          }
         }
       }
     }
@@ -137,19 +151,29 @@ const minmax = (board, depth, isMaximizing) => {
     let bestScore = Infinity
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        const block = board[i][j]
-        if (block.textContent === '') {
-          block.textContent = selectedToken
-          const score = minmax(board, depth + 1, true)
-          block.textContent = ''
+        if (board[i][j].textContent === '') {
+          board[i][j].textContent = selectedToken
+          const score = minimaxAlphaBeta(board, depth + 1, true, alpha, beta)
+          board[i][j].textContent = ''
           bestScore = Math.min(score, bestScore)
+          beta = Math.min(beta, score)
+          if (beta <= alpha) {
+            break // Alpha cutoff
+          }
         }
       }
     }
     return bestScore
   }
 }
+
+// Check if grid is filled
+const isBlocksFilled = () => {
+  return Array.from(blocks).every((block) => block.textContent !== '')
+}
+
 /** *********************************************** */
+// Check win conditions
 // Check win conditions
 const checkWinConditions = () => {
   if (horizontalAndVerticalChecks().outcome) {
@@ -207,10 +231,10 @@ const whoWins = (msg) => {
 }
 
 const displayWinMessage = () => {
-  if (checkWinConditions().outcome) {
-    whoWins(`${checkWinConditions().token} WINS`)
-  }
-  if (checkWinConditions().token === 'tie') {
+  const result = checkWinConditions()
+  if (result.outcome) {
+    whoWins(`${result.token} WINS`)
+  } else if (result.token === 'tie') {
     whoWins('TIE')
   }
 }
